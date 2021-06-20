@@ -1,0 +1,202 @@
+---
+title: "Age and Time of Shootings in New York City"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, tidy = TRUE, include=FALSE}
+
+###############################
+#If you have not downloaded tidyverse or lubridate, please un-comment the install commands below
+###############################
+
+# install.packages("tidyverse",repos = "http://cran.us.r-project.org")
+library("tidyverse")
+# install.packages("lubridate",repos = "http://cran.us.r-project.org")
+library("lubridate")
+source_file <- "https://data.cityofnewyork.us/api/views/833y-fsy8/rows.csv";
+nypd <- read_csv(source_file)
+colors = c("#b62b6e","#4a8594","#70390b","#B3C732","#ced7df")
+
+```
+-------------------------------------------------------------------
+
+### Areas of Focus
+1. At what age do people commit shootings in New York? Does this vary by race?
+2. What times of the day are most dangerous in New York?
+3. Can we estimate criminality during the day in order to deploy police accordingly?
+
+-------------------------------------------------------------------
+
+### About the data
+#### NYPD Shooting Incident Data (Historic)
+Information is accurate as of the date it was queried from the system of record, but should be considered a close approximation of current records, due to complaint revisions and updates.
+
+Only valid complaints are included in this release. Complaints deemed unfounded due to reporter error or misinformation are excluded from the data set, as they are not reflected in official figures nor are they considered to have actually occurred in a criminal context. Similarly, complaints that were voided due to internal error are also excluded from the data set.
+
+Investigation reports have been excluded to better ensure relevance and reduce extraneous material. These represent complaint reports taken that do not indicate or imply that any criminal activity has occurred; for example, a natural death of an elderly person in a nursing home or a report of lost property that has not been stolen.
+
+-------------------------------------------------------------------
+
+### At what age do people commit shootings in New York? Does this vary by race?
+Out of all the instances in which the age of the perpetrator was recorded, we can see that people on the younger side tend to appear more in police reports. This behavior seems to be consistent across all 5 boroughs of New York City.
+
+The age group where more shootings are concentrated is in the 18 to 24 demographic. This is remarkable considering theirs only 6 years that separate the lower and upper limit  of that bracket.
+
+On the other hand, although a much larger proportion of New York City's population, the 45+ demographic is considerably underrepresented in criminal reports across all boroughs.
+
+```{r, include=FALSE}
+nypd_boro_age <- nypd %>%
+  select(c(PERP_AGE_GROUP,BORO))
+nypd_boro_age <- filter(nypd_boro_age, !nypd_boro_age$PERP_AGE_GROUP %in% c('UNKNOWN','1020','940','224'))
+nypd_boro_age$BORO <- as.factor(nypd_boro_age$BORO)
+nypd_boro_age$PERP_AGE_GROUP <- as.factor(nypd_boro_age$PERP_AGE_GROUP)
+nypd_boro_age <- na.exclude(nypd_boro_age)
+```
+```{r, tidy = TRUE}
+ggplot(data=nypd_boro_age, aes(BORO))+
+  geom_bar(aes(fill=as.factor(PERP_AGE_GROUP)), position="fill") +
+  scale_fill_manual(values=colors, name = "Ages") +
+  xlab("Borough") +
+  ylab("Percentage")
+
+```
+
+
+Interestingly, if we look at age of criminals grouped by race, the trend seems to persist. An exception seems to be that white criminals are (on average) older than those of other races. This might also be caused by different races committing different kinds of crimes (e.g. if whites were to be committing more white-collar crimes that would not involve filing police reports, and therefore would not end up in our source data)
+
+
+```{r, include=FALSE}
+nypd_race_age <- nypd %>%
+  select(c(PERP_AGE_GROUP,PERP_RACE))
+nypd_race_age <- filter(nypd_race_age, !nypd_race_age$PERP_AGE_GROUP %in% c('UNKNOWN','1020','940','224'))
+nypd_race_age <- filter(nypd_race_age, !nypd_race_age$PERP_RACE %in% c('UNKNOWN'))
+nypd_race_age$PERP_RACE <- as.factor(nypd_race_age$PERP_RACE)
+nypd_race_age$PERP_AGE_GROUP <- as.factor(nypd_race_age$PERP_AGE_GROUP)
+nypd_race_age <- na.exclude(nypd_race_age)
+```
+```{r, tidy = TRUE}
+ggplot(data=nypd_race_age, aes(PERP_RACE)) +
+geom_bar(aes(fill=as.factor(PERP_AGE_GROUP)), position="fill") +
+coord_flip() +
+scale_fill_manual(values=colors, name = "Ages") +
+  xlab("Race") +
+  ylab("Percentage")
+
+```
+
+-------------------------------------------------------------------
+
+### What times of the day are most dangerous in New York?
+Another insight I thought interesting to plot was the idea that crimes seem to be more prevalent at nighttime. This unsurprisingly turned out to be quite a clear trend, and it is one that is shared by all boroughs. Below you can see the distribution of shootings during the day in each of the five boroughs of New Your City
+
+```{r, fig.height=5, fig.width=15, include=FALSE}
+
+
+nypd_time <- nypd %>%
+  select(c(OCCUR_TIME, BORO))
+nypd_time$OCCUR_TIME <- as.POSIXct(nypd_time$OCCUR_TIME, format="%H:%M:%S")
+bronx_nypd_time <- filter(nypd_time, nypd_time$BORO %in% c('BRONX'))
+manhattan_nypd_time <- filter(nypd_time, nypd_time$BORO %in% c('MANHATTAN'))
+queens_nypd_time <- filter(nypd_time, nypd_time$BORO %in% c('QUEENS'))
+brooklyn_nypd_time <- filter(nypd_time, nypd_time$BORO %in% c('BROOKLYN'))
+si_nypd_time <- filter(nypd_time, nypd_time$BORO %in% c('STATEN ISLAND'))
+```
+```{r, tidy = TRUE}
+brks <- trunc(range(bronx_nypd_time$OCCUR_TIME), "hours")
+hist(bronx_nypd_time$OCCUR_TIME, breaks=seq(brks[1], brks[2]+3600, by="30 min")
+     , xlab='Time of the day', ylab='Police report incidence', main = 'Bronx'
+     , col = c("#3f84fc"), yaxt='n'
+)
+
+brks <- trunc(range(manhattan_nypd_time$OCCUR_TIME), "hours")
+hist(manhattan_nypd_time$OCCUR_TIME, breaks=seq(brks[1], brks[2]+3600, by="30 min")
+     , xlab='Time of the day', ylab='Police report incidence', main = 'Manhattan'
+     , col = c("#fc3f4c"), yaxt='n'
+)
+
+brks <- trunc(range(queens_nypd_time$OCCUR_TIME), "hours")
+hist(queens_nypd_time$OCCUR_TIME, breaks=seq(brks[1], brks[2]+3600, by="30 min")
+     , xlab='Time of the day', ylab='Police report incidence', main = 'Queens'
+     , col = c("#7b5780"), yaxt='n'
+)
+
+brks <- trunc(range(brooklyn_nypd_time$OCCUR_TIME), "hours")
+hist(brooklyn_nypd_time$OCCUR_TIME, breaks=seq(brks[1], brks[2]+3600, by="30 min")
+     , xlab='Time of the day', ylab='Police report incidence', main = 'Brooklyn'
+     , col = c("#4a8f59"), yaxt='n'
+)
+
+brks <- trunc(range(si_nypd_time$OCCUR_TIME), "hours")
+hist(si_nypd_time$OCCUR_TIME, breaks=seq(brks[1], brks[2]+3600, by="30 min")
+     , xlab='Time of the day', ylab='Police report incidence', main = 'Staten Island'
+     , col = c("#ffbf7a"), yaxt='n'
+)
+
+```
+
+-------------------------------------------------------------------
+
+### Can we estimate criminality during the day in order to deploy police accordingly?
+My approach was to get a somewhat linear transformation of the OCCUR_TIME variable. To do this, I followed the steps below:
+
+1. Moved OCCUR_TIME backwards by 5 hours (e.g. 6AM became 1AM, 2AM became 9PM)
+2. Divided the 24 hours in 48 increments of 30 minutes labeled from 1 to 48
+3. For each of the 48 increments (x axis) I included the frequency of shootings (y axis)
+
+
+```{r, tidy = TRUE, include=FALSE}
+nypd_both <- nypd %>%
+  select(c(OCCUR_TIME))
+
+nypd_both$OCCUR_TIME <- as.POSIXct(nypd_both$OCCUR_TIME, format="%H")
+
+nypd_both$OCCUR_TIME <- nypd_both$OCCUR_TIME - (3600*5)
+nypd_both$OCCUR_TIME <- ifelse(nypd_both$OCCUR_TIME >=0
+                               , nypd_both$OCCUR_TIME
+                               , 3600*24 + nypd_both$OCCUR_TIME)
+nypd_both$OCCUR_TIME <- as.numeric((nypd_both$OCCUR_TIME%/%1800)+1)
+
+grouped_nypd_both <- data.frame(table(nypd_both))
+grouped_nypd_both$nypd_both <- as.numeric(grouped_nypd_both$nypd_both)
+
+mod <- lm(Freq ~ nypd_both, data= grouped_nypd_both)
+grouped_nypd_both <- grouped_nypd_both %>% mutate(pred = predict(mod))
+
+```
+```{r, tidy = TRUE}
+grouped_nypd_both %>% ggplot() + 
+  geom_point(aes(x=nypd_both, y=Freq), color = 'blue') +
+  geom_point(aes(x=nypd_both, y=pred), color = 'red') +
+  xlab("30 min increments since 5AM") +
+  ylab("Police Reports")
+```
+
+
+```{r}
+
+summary(grouped_nypd_both)
+summary(mod)
+```
+
+-------------------------------------------------------------------
+
+### Bias
+Since this dataset is a reflection of police reports, it is possible that it does not translate exactly to real crime prevalence. For instance, it might be the case that younger people look more threatening, leading people to report them more often and thus over-representing them in the dataset used here as a source.
+
+"Some *mala prohibita* offenses do not require a complaint report and may not be represented accurately, or at all, in this dataset. These incidents are generally tracked using other Department forms, including arrests and summonses. These include (but are not limited to) certain drug, trespassing, theft of service, and prostitution offenses."
+
+The paragraph above indicates that there might be some sort of sampling bias.
+
+-------------------------------------------------------------------
+
+### Conclusion
+
+There is a significant correlation between time of the day and the prevalence of shootings. Consequently it could be cost effective to target police deployment during the times of most danger.
+
+Police requirement is counter-cyclical with respect to traditional business hours. This might also mean that in order to attract people to policing, ceteris paribus, better pay would be required by the officers to make up for the increased workloads in non-traditional working hours, since this would hinder their social and family lives.

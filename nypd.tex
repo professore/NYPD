@@ -1,0 +1,343 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={NYPD},
+  pdfauthor={J. Baldrich},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{NYPD}
+\author{J. Baldrich}
+\date{6/8/2021}
+
+\begin{document}
+\maketitle
+
+\hypertarget{nypd-shooting-incident-data-historic}{%
+\subsection{NYPD Shooting Incident Data
+(Historic)}\label{nypd-shooting-incident-data-historic}}
+
+This dataset includes all valid felony, misdemeanor, and violation
+crimes reported to the New York City Police Department (NYPD) from 2006
+to the end of 2019.
+
+\hypertarget{nypd-complaints-incident-level-data-footnotes}{%
+\subsubsection{NYPD Complaints Incident Level Data
+Footnotes}\label{nypd-complaints-incident-level-data-footnotes}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Information is accurate as of the date it was queried from the system
+  of record, but should be considered a close approximation of current
+  records, due to complaint revisions and updates.
+\item
+  Data is available as of the date that technological enhancements to
+  information systems allowed for data capture. Null values appearing
+  frequently in certain fields may be attributed to changes on official
+  department forms where data was previously not collected. Null values
+  may also appear in instances where information was not available or
+  unknown at the time of the report and should be considered as either
+  ``Unknown/Not Available/Not Reported.''
+\item
+  Crime complaints which involve multiple offenses are classified
+  according to the most serious offense. Attempted crimes are recorded
+  regardless of whether or not the criminal act was successful, except
+  in the instance of Attempted Murder, which is recorded as Felony
+  Assault.
+\item
+  When a complaint contains only a From Datetime, this represents the
+  exact datetime when the crime incident was reported to occur. In the
+  event a complaint has both a From Datetime and a To Datetime, a time
+  range (rather than an exact time) was specified for the occurrence of
+  the crime. In rare cases, records containing only a To Datetime
+  indicate only a known endpoint to the crime.
+\item
+  The Report Date represents the date the incident was actually reported
+  to the NYPD. This dataset is released based on the date the incident
+  was reported, not necessarily when it occurred. Some crimes may have
+  occurred years before they were reported.
+\item
+  There is one exception to the above report date rule: if an incident
+  eventually results in a victim's death, the incident is upgraded to a
+  murder and the report date is recorded as the date of the victim's
+  death, rather than the original report date of the incident.
+\item
+  The Complaint Time is based on the 24-hour clock. 00:01:00 hours
+  represents 12:01am, 13:59:00 hours represents 1:59pm, etc.
+\item
+  Arrests occurring near an intersection are represented by the X
+  coordinate and Y coordinates of the intersection. Arrests occurring
+  anywhere other than at an intersection are geo-located to the middle
+  of the nearest street segment where appropriate.
+\item
+  Any attempt to match the approximate location of the incident to an
+  exact address or link to other datasets is not recommended.
+\item
+  To further protect victim identities, rape and sex crime offenses have
+  been located as occurring at the police station house within the
+  precinct of occurrence.
+\item
+  Many other offenses that were not able to be geo-coded (for example,
+  due to an invalid address) have been located as occurring at the
+  police station house within the precinct of occurrence.
+\item
+  Offenses occurring in open areas such as parks or beaches may be
+  geo-coded as occurring on streets or intersections bordering the area.
+\item
+  Offenses occurring on a moving train on transit systems are geo-coded
+  as occurring at the train's next stop.
+\item
+  The NYC subway system is divided by transit district boundaries which
+  behave similar to precinct boundaries. Staten Island Rapid Transit
+  does not fall under the NYPD transit jurisdiction but instead falls
+  under MTA jurisdiction.
+\item
+  All offenses occurring within the jurisdiction of the Department of
+  Correction have been geo-coded as occurring on Riker's Island.
+\item
+  X and Y Coordinates are in NAD 1983 State Plane New York Long Island
+  Zone Feet (EPSG 2263).
+\item
+  Latitude and Longitude Coordinates are provided in Global Coordinate
+  System WGS 1984 decimal degrees (EPSG 4326).
+\item
+  These data represent criminal offenses according to New York State
+  Penal Law definitions, not FBI Uniform Crime Report definitions, and
+  are therefore not comparable to UCR reported crime.
+\item
+  Errors in data transcription may result in nominal data
+  inconsistencies.
+\item
+  The CSV file should be opened using an appropriate tool for data
+  exploration, e.g.~SPSS, SAS, Tableau, etc. If using MS Excel, be sure
+  to use the tools for importing external data, otherwise
+  inconsistencies may occur when viewing the data.
+\item
+  Only valid complaints are included in this release. Complaints deemed
+  unfounded due to reporter error or misinformation are excluded from
+  the data set, as they are not reflected in official figures nor are
+  they considered to have actually occurred in a criminal context.
+  Similarly, complaints that were voided due to internal error are also
+  excluded from the data set.
+\item
+  Investigation reports have been excluded to better ensure relevance
+  and reduce extraneous material. These represent complaint reports
+  taken that do not indicate or imply that any criminal activity has
+  occurred; for example, a natural death of an elderly person in a
+  nursing home or a report of lost property that has not been stolen.
+\item
+  Some \emph{mala prohibita} offenses do not require a complaint report
+  and may not be represented accurately, or at all, in this dataset.
+  These incidents are generally tracked using other Department forms,
+  including arrests and summonses. These include (but are not limited
+  to) certain drug, trespassing, theft of service, and prostitution
+  offenses.
+\item
+  Field Names and Descriptions are as follows:
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{age-of-the-perpetrator}{%
+\subsubsection{Age of the perpetrator}\label{age-of-the-perpetrator}}
+
+Out of all the instances in which the age of the perpetrator was
+recorded, we can see that people on the younger side tend to appear more
+in police reports.
+
+\includegraphics{nypd_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\hypertarget{time-of-the-crime}{%
+\subsubsection{Time of the crime}\label{time-of-the-crime}}
+
+Another insight I thought interesting to plot was the almost evident
+idea that crimes seem to be more prevalent at nighttime.
+
+\includegraphics{nypd_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{time-of-the-crime-age-of-criminal}{%
+\subsubsection{Time of the crime \& age of
+criminal}\label{time-of-the-crime-age-of-criminal}}
+
+Although not a very useful model, there seems to be a very tenuous
+relation between age of the criminal and time of the crime.
+Specifically, the later the crime is commited, the younger the criminal
+will be.
+
+To calculate this, I converted the text versions of the age brackets
+into numbers
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Text & Number \\
+\midrule
+\endhead
+\textless18 & 16 \\
+18-24 & 21 \\
+25-44 & 34 \\
+45-64 & 54 \\
+65+ & 75 \\
+\bottomrule
+\end{longtable}
+
+\includegraphics{nypd_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+Of course this is very inaccurate, since the ``time of occurrence''
+variable does not really explain the age of the criminal very well.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nypd\_both }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{OCCUR\_TIME, }\AttributeTok{y=}\NormalTok{PERP\_AGE\_GROUP), }\AttributeTok{color =} \StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{OCCUR\_TIME, }\AttributeTok{y=}\NormalTok{pred), }\AttributeTok{color =} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{nypd_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = PERP_AGE_GROUP ~ OCCUR_TIME, data = nypd_both)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -11.369  -6.250  -5.783   6.974  48.265 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  2.737e+01  1.612e-01 169.806   <2e-16 ***
+## OCCUR_TIME  -7.383e-06  2.910e-06  -2.537   0.0112 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 9.421 on 11948 degrees of freedom
+## Multiple R-squared:  0.0005383,  Adjusted R-squared:  0.0004547 
+## F-statistic: 6.436 on 1 and 11948 DF,  p-value: 0.0112
+\end{verbatim}
+
+\hypertarget{bias}{%
+\subsubsection{Bias}\label{bias}}
+
+Since this dataset is a reflection of police reports, it is possible
+that it does not translate exactly to real crimes. For instance, it
+might be the case that younger people look sketchier, leading people to
+report them more often and thus over-representing them in the dataset
+used here as a source.
+
+\end{document}
